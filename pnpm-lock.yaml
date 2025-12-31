@@ -9,13 +9,13 @@ importers:
   .:
     devDependencies:
       '@biomejs/biome':
-        specifier: ^2.0.6
+        specifier: ^2.3.10
         version: 2.3.10
       typescript:
-        specifier: ^5.7.2
+        specifier: ^5.9.3
         version: 5.9.3
       vitest:
-        specifier: ^2.1.8
+        specifier: ^2.1.9
         version: 2.1.9
 
 packages:
