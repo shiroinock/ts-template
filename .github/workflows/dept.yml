@@ -5,7 +5,12 @@
 name: dept
 
 on:
-  push:
+  # Once CI has finished on main. A merge by GITHUB_TOKEN (the merge reservation) sends no push
+  # event; the reservation runs CI on main again afterwards (workflow_dispatch), and a person's
+  # merge runs it by push, so both reach here.
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
     branches: [main]
   schedule:
     - cron: "0 0 * * 1" # every Monday; new releases raise the score without a push
