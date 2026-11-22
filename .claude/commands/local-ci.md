@@ -55,10 +55,10 @@ description: remote CI (GitHub Actions) 相当のチェックをローカルで�
     - 脆弱性は依存関係のアップデート時に主に発生し、コード変更では影響を受けない
   - **remote CI (GitHub Actions) での実行**:
     - すべての PR で自動的に実行されます
-    - security-audit ジョブとして独立して実行され、失敗時は PR マージがブロックされます
+    - `check` ジョブの中で実行され、本番の依存に high 以上の脆弱性があると失敗します(dev の依存と moderate 以下は、Dependabot のアラートと Renovate の脆弱性 PR で拾う)
   - **ローカルでの手動実行**（必要に応じて）:
     ```bash
-    pnpm audit --audit-level=moderate
+    pnpm audit --prod --audit-level=high
     pnpm run secretlint
     ```
 

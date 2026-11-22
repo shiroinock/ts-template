@@ -14,7 +14,7 @@
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
     "typecheck": "tsc --noEmit",
-    "audit": "pnpm audit --audit-level=moderate"
+    "audit": "pnpm audit --prod --audit-level=high"
   },
   "keywords": [],
   "license": "MIT",
