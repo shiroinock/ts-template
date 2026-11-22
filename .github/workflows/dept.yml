@@ -5,9 +5,11 @@
 name: dept
 
 on:
-  # Once CI has finished on main. A merge by GITHUB_TOKEN (the merge reservation) sends no push
-  # event; the reservation runs CI on main again afterwards (workflow_dispatch), and a person's
-  # merge runs it by push, so both reach here.
+  # A person's merge.
+  push:
+    branches: [main]
+  # A merge by GITHUB_TOKEN (the merge reservation) sends no push event; the reservation runs CI on
+  # main again afterwards (workflow_dispatch), so this catches those merges once that CI is done.
   workflow_run:
     workflows: [CI]
     types: [completed]
@@ -20,6 +22,13 @@ permissions: {}
 
 jobs:
   dept:
+    # branches: [main] matches the head branch name only, and a fork's PR branch can be called main
+    # too, so take only CI that passed on this repository's main (a push or the dispatch above).
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_repository.full_name == github.repository &&
+       (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch'))
     uses: shiroinock/workflows/.github/workflows/dept.yml@main
     permissions:
       contents: write # push the badge branch
