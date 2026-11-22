@@ -1,0 +1,39 @@
+# Scores how far the dependencies lag behind their latest releases and keeps the README badge
+# and its report up to date (public repositories only). In the README, link the badge to the report:
+#   [![dept](https://raw.githubusercontent.com/<owner>/<repo>/dept-badge/dept.svg)](https://github.com/<owner>/<repo>/blob/dept-badge/dept.md)
+# The job lives in shiroinock/workflows; change it there, not here.
+name: dept
+
+on:
+  # A person's merge.
+  push:
+    branches: [main]
+  # A merge by GITHUB_TOKEN (the merge reservation) sends no push event; the reservation runs CI on
+  # main again afterwards (workflow_dispatch), so this catches those merges once that CI is done.
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  schedule:
+    - cron: "0 0 * * 1" # every Monday; new releases raise the score without a push
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  dept:
+    # branches: [main] matches the head branch name only, and a fork's PR branch can be called main
+    # too, so take only CI that passed on this repository's main (a push or the dispatch above).
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_repository.full_name == github.repository &&
+       (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch'))
+    uses: shiroinock/workflows/.github/workflows/dept.yml@main
+    permissions:
+      contents: write # push the badge branch
+    # with:
+    #   path: .                # the lockfile, or a directory that has one
+    #   args: --prod           # extra arguments for dept
+    #   allow_errors: false    # put the badge even when some dependencies could not be checked
+    #   branch: dept-badge     # where dept.svg, dept.md and dept.json go; empty to not push
