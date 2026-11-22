@@ -1,3 +1,22 @@
+# pnpm reads its own settings here; pnpm 11 reads only auth and registry settings from .npmrc.
+
+# Security: do not run install scripts (supply chain attacks).
+ignoreScripts: true
+
 # Supply chain: install only versions published at least 3 days ago (in minutes).
 # Renovate waits 7 days for ordinary updates and 3 for security fixes.
 minimumReleaseAge: 4320
+
+# Strict dependency management.
+strictPeerDependencies: true
+autoInstallPeers: false
+
+# Save exact versions (no ^ or ~).
+saveExact: true
+
+# Always generate the lockfile, and require it to be up to date.
+lockfile: true
+frozenLockfile: true
+
+# Use hardlinks for better performance and disk usage.
+packageImportMethod: hardlink
