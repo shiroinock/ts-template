@@ -10,7 +10,7 @@ on:
     branches: [main]
   # A merge by GITHUB_TOKEN (the merge reservation) sends no push event; the reservation runs CI on
   # main again afterwards (workflow_dispatch), so this catches those merges once that CI is done.
-  workflow_run:
+  workflow_run: # zizmor: ignore[dangerous-triggers] the job's if takes only this repository's CI on main
     workflows: [CI]
     types: [completed]
     branches: [main]
@@ -29,7 +29,7 @@ jobs:
       (github.event.workflow_run.conclusion == 'success' &&
        github.event.workflow_run.head_repository.full_name == github.repository &&
        (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch'))
-    uses: shiroinock/workflows/.github/workflows/dept.yml@main
+    uses: shiroinock/workflows/.github/workflows/dept.yml@main # zizmor: ignore[unpinned-uses] the owner's own shared jobs, followed at main on purpose
     permissions:
       contents: write # push the badge branch
     # with:
