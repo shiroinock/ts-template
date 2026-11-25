@@ -20,3 +20,8 @@ frozenLockfile: true
 
 # Use hardlinks for better performance and disk usage.
 packageImportMethod: hardlink
+
+# Security: lower bounds for vulnerable transitive dependencies.
+overrides:
+  rollup: ">=4.59.0"
+  picomatch: ">=4.0.4"
